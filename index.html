@@ -274,10 +274,13 @@ input,textarea,select{font:inherit;color:inherit}
 .tip[hidden]{display:none}
 
 /* ---------- 로그인 (이름 + 숫자 4자리) ---------- */
-.auth{position:fixed;inset:0;z-index:80;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.auth{position:fixed;inset:0;z-index:80;background:var(--bg-soft);display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
 .auth[hidden]{display:none}
-.auth-box{width:100%;max-width:380px;text-align:center}
-.auth-logo{width:56px;height:56px;border-radius:16px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px;margin:0 auto 14px}
+.auth-box{width:100%;max-width:380px;text-align:center;margin:auto 0}
+/* 인트로 이미지: 아래 입력칸·버튼과 같은 폭, 숫자 화면에서는 키패드 폭에 맞춤 */
+.auth-art{display:block;width:min(100%, max(200px, calc(100dvh - 430px)));height:auto;margin:0 auto 18px}
+.auth[data-step^=pin] .auth-art{width:min(256px, 26vh)}
+.auth[data-step=loading] .auth-art{width:min(256px, 40vh)}
 .auth h1{font-size:24px;margin:0 0 6px;letter-spacing:-.5px}
 .auth-sub{color:var(--text-sub);margin:0 0 22px;font-size:15px;min-height:20px}
 .who{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:22px}
@@ -482,7 +485,7 @@ input,textarea,select{font:inherit;color:inherit}
 <!-- 로그인: 이름 + 숫자 4자리 -->
 <div class="auth" id="auth" hidden>
   <div class="auth-box">
-    <div class="auth-logo">MC</div>
+    <img class="auth-art" src="images/family-stamp.webp" alt="우리집 달력" width="380" height="380">
     <h1 id="authTitle"></h1>
     <p class="auth-sub" id="authSub"></p>
     <div id="authBody"></div>
@@ -829,6 +832,7 @@ function renderAuth(msg = ''){
     links = `<button data-auth="back">처음으로</button>`;
   }
   if (s !== 'loading' && s !== 'pin2') links += `<button data-auth="local">로그인 없이 이 기기에서만 쓰기</button>`;
+  $('auth').dataset.step = s;
   $('authTitle').textContent = title; $('authSub').textContent = sub;
   $('authBody').innerHTML = body; $('authLinks').innerHTML = links; $('authMsg').textContent = msg;
   if (s === 'name') setTimeout(() => $('authName')?.focus(), 30);
