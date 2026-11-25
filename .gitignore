@@ -1,0 +1,9 @@
+# OS / OneDrive
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 개인 설정·비밀 정보 (올리지 않음)
+.claude/settings.local.json
+.env
+.env.*
