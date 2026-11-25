@@ -290,7 +290,7 @@ input,textarea,select{font:inherit;color:inherit}
 .auth[data-step^=pin] .auth-art,.auth[data-step=avatar] .auth-art{width:min(256px, 26vh)}
 .av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
 .who .av,.userbtn .av{overflow:hidden}
-.avatars{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:4px 0 6px}
+.avatars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:300px;margin:22px auto 26px}
 .avatars button{aspect-ratio:1;border-radius:50%;overflow:hidden;padding:0;background:#fff;box-shadow:0 0 0 1px var(--line-strong);transition:transform .12s}
 .avatars button.sel{box-shadow:0 0 0 4px var(--accent);transform:scale(1.05)}
 .avatars img{width:100%;height:100%;object-fit:cover;display:block}
@@ -826,7 +826,7 @@ function renderUser(){
 
 /* ---------- 로그인 화면 ---------- */
 const auth = { step:'who', mode:'login', name:'', pin:'', pin1:'', avatar:'' };
-// 프로필 그림 (images/avatar-<이름>.webp)
+// 프로필 이미지 (images/avatar-<이름>.webp)
 const AVATARS = [['sun','해'], ['moon','달'], ['cloud','구름'], ['rain','빗방울'], ['bolt','번개'], ['snow','눈송이'], ['rainbow','무지개'], ['star','별']];
 const avatarHtml = (key, name = '') => AVATARS.some(a => a[0] === key)
   ? `<img src="images/avatar-${key}.webp" alt="">` : esc(String(name).slice(0, 1) || '?');
@@ -856,7 +856,7 @@ function renderAuth(msg = ''){
     links = (reg ? `<button data-auth="login">이미 등록했어요 (로그인)</button>` : `<button data-auth="register">사용자 등록이 필요하다면 여기를 클릭해 주세요!</button>`)
       + (knownNames().length ? `<button data-auth="back">처음으로</button>` : '');
   } else if (s === 'avatar'){
-    title = '프로필 그림을 골라요'; sub = '마음에 드는 그림을 하나 눌러 주세요.';
+    title = '프로필 이미지를 골라요'; sub = '마음에 드는 이미지를 하나 눌러 주세요.';
     body = `<div class="avatars">${AVATARS.map(([k, label]) => `<button data-auth="avatar" data-av="${k}" class="${auth.avatar === k ? 'sel' : ''}" aria-label="${label}" title="${label}"><img src="images/avatar-${k}.webp" alt=""></button>`).join('')}</div>
       <button class="big primary" data-auth="avatarNext">다음</button>`;
     links = `<button data-auth="back">처음으로</button>`;
@@ -892,7 +892,7 @@ async function submitPin(){
       ? await cloud.sb.rpc('register', {p_name:auth.name, p_pin:pin, p_avatar:auth.avatar || null})
       : await cloud.sb.rpc('login', {p_name:auth.name, p_pin:pin});
     if (error && auth.mode === 'register' && error.code === 'PGRST202'){
-      // 프로필 그림 SQL(002)을 아직 실행하지 않은 경우: 그림 없이 등록
+      // 프로필 이미지 SQL(002)을 아직 실행하지 않은 경우: 이미지 없이 등록
       ({ data, error } = await cloud.sb.rpc('register', {p_name:auth.name, p_pin:pin}));
     }
     if (error) throw error;
@@ -931,7 +931,7 @@ $('auth').addEventListener('click', e => {
   else if (a === 'register'){ Object.assign(auth, {mode:'register', name:'', avatar:'', step:'name'}); renderAuth(); }
   else if (a === 'avatar'){ auth.avatar = e.target.closest('[data-av]').dataset.av; renderAuth(); }
   else if (a === 'avatarNext'){
-    if (!auth.avatar){ renderAuth('그림을 하나 골라 주세요.'); return; }
+    if (!auth.avatar){ renderAuth('이미지를 하나 골라 주세요.'); return; }
     auth.step = 'pin'; auth.pin = ''; renderAuth();
   }
   else if (a === 'login'){ Object.assign(auth, {mode:'login', step:'name'}); renderAuth(); }
@@ -1472,11 +1472,11 @@ function addCat(){
 /* ---------- 이벤트 ---------- */
 function closeModals(){ $('evModal').hidden = true; $('catModal').hidden = true; $('profileModal').hidden = true; ui.iconFor = null; }
 
-/* ---------- 내 프로필 (그림 바꾸기 · 로그아웃) ---------- */
+/* ---------- 내 프로필 (이미지 바꾸기 · 로그아웃) ---------- */
 function openProfile(msg = ''){
   const me = cloud.me; if (!me) return;
   $('profileBody').innerHTML = `<div class="profile-head"><span class="av">${avatarHtml(me.avatar, me.name)}</span><div><b>${esc(me.name)}</b><div class="hint" style="margin:2px 0 0">가족 캘린더에 로그인했어요</div></div></div>
-    <div class="hint" style="margin-bottom:10px">프로필 그림을 바꾸려면 아래에서 하나를 눌러 주세요.</div>
+    <div class="hint" style="margin-bottom:10px">프로필 이미지를 바꾸려면 아래에서 하나를 눌러 주세요.</div>
     <div class="avatars">${AVATARS.map(([k, label]) => `<button data-act="setMyAvatar" data-av="${k}" class="${me.avatar === k ? 'sel' : ''}" aria-label="${label}" title="${label}"><img src="images/avatar-${k}.webp" alt=""></button>`).join('')}</div>
     <div class="hint" style="color:var(--sun);min-height:18px;margin:8px 0 0">${esc(msg)}</div>`;
   $('profileModal').hidden = false;
