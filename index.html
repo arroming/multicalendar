@@ -824,13 +824,13 @@ function renderAuth(msg = ''){
     title = '누구예요?'; sub = '내 이름을 눌러요';
     body = `<div class="who">${knownNames().map(n => `<button data-auth="pick" data-name="${esc(n)}"><span class="av">${esc(n.slice(0, 1))}</span>${esc(n)}</button>`).join('')}</div>
       <button class="big ghost" data-auth="other">다른 이름으로 들어가기</button>`;
-    links = `<button data-auth="register">처음 왔어요 (가족 등록)</button>`;
+    links = `<button data-auth="register">사용자 등록이 필요하다면 여기를 클릭해 주세요!</button>`;
   } else if (s === 'name'){
     title = reg ? '이름을 정해요' : '누가 오셨나요?';
     sub = reg ? '가족이 알아볼 수 있는 이름 (10글자까지)' : '등록한 이름을 아래에 적어 주세요.';
     body = `<input class="nameinput" id="authName" maxlength="10" autocomplete="off" value="${esc(auth.name)}" placeholder="이름">
       <button class="big primary" data-auth="nameNext">다음</button>`;
-    links = (reg ? `<button data-auth="login">이미 등록했어요 (로그인)</button>` : `<button data-auth="register">처음 왔어요 (가족 등록)</button>`)
+    links = (reg ? `<button data-auth="login">이미 등록했어요 (로그인)</button>` : `<button data-auth="register">사용자 등록이 필요하다면 여기를 클릭해 주세요!</button>`)
       + (knownNames().length ? `<button data-auth="back">처음으로</button>` : '');
   } else if (s === 'pin' || s === 'pin2'){
     title = s === 'pin2' ? '한 번 더 눌러 주세요' : reg ? '비밀번호 4자리를 정해요' : `${auth.name}의 비밀번호`;
@@ -846,7 +846,7 @@ function renderAuth(msg = ''){
   if (s === 'name') setTimeout(() => $('authName')?.focus(), 30);
 }
 const AUTH_ERR = {
-  not_found: n => `'${n}' 이름을 찾을 수 없어요. 처음이라면 '처음 왔어요'를 눌러요.`,
+  not_found: n => `'${n}' 이름을 찾을 수 없어요. 처음이라면 아래 '사용자 등록' 링크를 눌러 주세요.`,
   wrong_pin: (n, r) => `숫자가 틀렸어요.${r.left !== undefined ? ` (남은 기회 ${r.left}번)` : ''}`,
   locked: () => '여러 번 틀려서 10분 동안 쉬어야 해요. 조금 있다가 다시 해요.',
   name_taken: () => '이미 있는 이름이에요. 다른 이름을 정해 주세요.',
