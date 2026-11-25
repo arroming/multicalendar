@@ -826,8 +826,8 @@ function renderAuth(msg = ''){
       <button class="big ghost" data-auth="other">다른 이름으로 들어가기</button>`;
     links = `<button data-auth="register">처음 왔어요 (가족 등록)</button>`;
   } else if (s === 'name'){
-    title = reg ? '이름을 정해요' : '이름을 써 주세요';
-    sub = reg ? '가족이 알아볼 수 있는 이름 (10글자까지)' : '가족 등록할 때 정한 이름';
+    title = reg ? '이름을 정해요' : '누가 오셨나요?';
+    sub = reg ? '가족이 알아볼 수 있는 이름 (10글자까지)' : '등록한 이름을 아래에 적어 주세요.';
     body = `<input class="nameinput" id="authName" maxlength="10" autocomplete="off" value="${esc(auth.name)}" placeholder="이름">
       <button class="big primary" data-auth="nameNext">다음</button>`;
     links = (reg ? `<button data-auth="login">이미 등록했어요 (로그인)</button>` : `<button data-auth="register">처음 왔어요 (가족 등록)</button>`)
