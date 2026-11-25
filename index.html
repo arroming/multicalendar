@@ -845,6 +845,7 @@ function showAuth(step, msg = ''){
   if (step === 'who' && !knownNames().length) Object.assign(auth, {step:'name', mode:'login'});
   $('auth').hidden = false; renderAuth(msg);
 }
+const REG_LINKS = `<button data-auth="back">처음으로</button><button data-auth="login">이미 등록했어요 (로그인)</button>`;
 function renderAuth(msg = ''){
   const s = auth.step, reg = auth.mode === 'register';
   let title = '', sub = '', body = '', links = '';
@@ -859,13 +860,14 @@ function renderAuth(msg = ''){
     sub = reg ? '가족이 알아볼 수 있는 이름을 10자 이내로 작성해 주세요.' : '등록한 이름을 아래에 적어 주세요.';
     body = `<div class="inputwrap"><input class="nameinput" id="authName" maxlength="10" autocomplete="off" value="${esc(auth.name)}" placeholder="이름"><button type="button" class="clear" data-auth="clearName" aria-label="이름 지우기" title="지우기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
       <button class="big primary" data-auth="nameNext">다음</button>`;
-    links = (reg ? `<button data-auth="login">이미 등록했어요 (로그인)</button>` : `<button data-auth="register">사용자 등록이 필요하다면 여기를 클릭해 주세요!</button>`)
-      + (reg || knownNames().length ? `<button data-auth="back">처음으로</button>` : ''); // 등록 중에는 항상 '처음으로'
+    // 등록 단계 링크 순서: 처음으로 → 이미 등록했어요 → (아래에서 붙는) 로그인 없이
+    links = reg ? REG_LINKS
+      : `<button data-auth="register">사용자 등록이 필요하다면 여기를 클릭해 주세요!</button>` + (knownNames().length ? `<button data-auth="back">처음으로</button>` : '');
   } else if (s === 'avatar'){
     title = '프로필 이미지를 골라요'; sub = '마음에 드는 이미지를 하나 눌러 주세요.';
     body = `<div class="avatars">${AVATARS.map(([k, label]) => `<button data-auth="avatar" data-av="${k}" class="${auth.avatar === k ? 'sel' : ''}" aria-label="${label}" title="${label}"><img src="images/avatar-${k}.webp" alt=""></button>`).join('')}</div>
       <button class="big primary" data-auth="avatarNext">다음</button>`;
-    links = `<button data-auth="back">처음으로</button>`;
+    links = REG_LINKS;
   } else if (s === 'pin' || s === 'pin2'){
     title = s === 'pin2' ? '한 번 더 눌러 주세요' : reg ? '비밀번호 4자리를 정해요' : `${auth.name}의 비밀번호`;
     sub = s === 'pin2' ? '방금 정한 숫자 4개를 똑같이' : reg ? '숫자 4개를 꼭 기억해요' : '숫자 4개를 눌러요';
