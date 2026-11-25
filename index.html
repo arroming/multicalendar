@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>멀티 캘린더</title>
+<link rel="icon" type="image/png" sizes="64x64" href="images/favicon-64.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="우리집 달력">
+<meta name="application-name" content="우리집 달력">
+<meta name="theme-color" content="#ffffff">
 <style>
 :root{
   --bg:#ffffff; --bg-soft:#f7f8fa; --line:#e6e8eb; --line-strong:#d5d8dc;
@@ -23,7 +28,7 @@ input,textarea,select{font:inherit;color:inherit}
 .topbar{display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:20px;letter-spacing:-.5px;white-space:nowrap;flex:none}
 @media (max-width:1080px){.brand .txt{display:none}.monthnav{margin-left:0}}
-.brand .logo{width:28px;height:28px;border-radius:7px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800}
+.brand .logo{width:38px;height:38px;display:block;margin:-4px 0}
 .monthnav{display:flex;align-items:center;gap:6px;margin-left:12px}
 .monthnav .label{font-size:20px;font-weight:700;min-width:92px;letter-spacing:-.3px;text-align:center;white-space:nowrap}
 .monthnav .btn.icon{width:36px;height:36px}
@@ -393,7 +398,7 @@ input,textarea,select{font:inherit;color:inherit}
 <body>
 <div class="app">
   <header class="topbar">
-    <div class="brand"><div class="logo">MC</div><span class="txt">멀티 캘린더</span></div>
+    <div class="brand"><img class="logo" src="images/family-stamp.webp" alt="우리집 달력" width="38" height="38"><span class="txt">멀티 캘린더</span></div>
     <div class="monthnav">
       <button class="btn icon" data-act="prev" aria-label="이전"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
       <div class="label" id="monthLabel"></div>
