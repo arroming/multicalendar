@@ -17,9 +17,11 @@
   --today:#f3f8fc; --radius:8px; --shadow:0 8px 28px rgba(0,0,0,.14);
   --panel-w:360px;
 }
+/* 서비스 폰트: 배달의민족 꾸불림체 (SIL OFL 1.1, 라이선스 전문: fonts/LICENSE-BM.txt) */
+@font-face{font-family:"BMKkubulim";src:url("fonts/bm-kkubulim.otf") format("opentype");font-display:swap;size-adjust:109%}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:"BMKkubulim",-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
 input,textarea,select{font:inherit;color:inherit}
 .app{display:flex;flex-direction:column;height:100dvh}
