@@ -1224,7 +1224,7 @@ function cellItems(s, dow, opt = {}){
         html.push(`<div class="chip soft">${svgIcon(iconOf(c), 'currentColor', 'cico')}<span class="cname">${esc(c.name)} </span>${list.length}건</div>`);
       } else {
         const t = ledgerTotals(list);
-        for (const [k, [l, col]] of Object.entries(LG_TYPES)) if (t[k]) html.push(`<div class="lg-line" style="color:${col}" title="${l} ${won(t[k])}원">${LG_SIGN[k]}${won(t[k])}</div>`);
+        for (const [k, [l, col]] of Object.entries(LG_TYPES)) if (t[k]) html.push(`<div class="lg-line" data-day="${s}" style="color:${col}" title="${l} ${won(t[k])}원 · 눌러서 내역 보기">${LG_SIGN[k]}${won(t[k])}</div>`);
       }
     }
   }
@@ -1248,7 +1248,7 @@ function renderGrid(){
     html += `<div class="${cls}" data-date="${s}">
       <div class="head"><span class="num">${d.getDate()}</span>${hol ? `<span class="hname">${hol}</span>` : ''}<span class="lunar">${lunarLabel(s)}</span></div>
       ${termOf(s) ? `<div class="term">${termOf(s)}</div>` : ''}
-      <div class="items">${shown.join('')}${items.length > shown.length ? `<div class="more">+${items.length - shown.length}</div>` : ''}</div></div>`;
+      <div class="items">${shown.join('')}${items.length > shown.length ? `<div class="more" data-day="${s}" title="이 날 기록 모두 보기">+${items.length - shown.length}</div>` : ''}</div></div>`;
   }
   $('grid').innerHTML = html;
 }
@@ -1342,9 +1342,9 @@ function renderTime(){
         }).join('') || '<div class="hint2">탭 편집에서 항목을 추가하세요</div>'}</div>`;
       }
       if (ac.kind === 'ledger'){
-        return `<div class="tv-card" data-day="${s}" style="${bg}cursor:pointer">${ledgerOn(ac.id, s).map(x => {
+        return `<div class="tv-card" data-lgnew="${s}" style="${bg}cursor:pointer">${ledgerOn(ac.id, s).map(x => {
           const [l, col] = LG_TYPES[x.type] || LG_TYPES.out;
-          return `<div class="slot-v"><span style="color:${col}">${l}${x.fixed ? ' · 고정' : ''}</span>${x.memo ? esc(x.memo) + ' ' : ''}${won(x.amount)}원</div>`;
+          return `<div class="slot-v" data-lg="${x.id}" data-lgcat="${ac.id}" data-lgdate="${s}"><span style="color:${col}">${l}${x.fixed ? ' · 고정' : ''}</span>${x.memo ? esc(x.memo) + ' ' : ''}${won(x.amount)}원</div>`;
         }).join('') || '<div class="hint2">눌러서 기록하기</div>'}</div>`;
       }
       const v = (db.notes[ac.id] || {})[s] || {}; const filled = noteItems(ac).filter(it => v[it.id] && v[it.id].trim());
@@ -1815,6 +1815,8 @@ document.addEventListener('click', e => {
 
   const lgEl = t.closest('[data-lg]');
   if (lgEl){ openLgModal(lgEl.dataset.lgcat, lgEl.dataset.lgdate, lgEl.dataset.lg); return; }
+  const lgNew = t.closest('[data-lgnew]'); // 가계부 탭 주간·일간: 빈 곳 클릭 → 바로 등록
+  if (lgNew){ ui.selected = lgNew.dataset.lgnew; openLgModal(db.activeTab, lgNew.dataset.lgnew); return; }
   const evEl = t.closest('[data-ev]');
   if (evEl){ e.stopPropagation(); openEvModal(db.events.find(x => x.id === evEl.dataset.ev)); return; }
 
@@ -1839,7 +1841,12 @@ document.addEventListener('click', e => {
     ui.selected = col.dataset.date; openEvModal(null, col.dataset.date, null, pad(hour) + ':00'); return;
   }
   const cell = t.closest('.cell');
-  if (cell) openPanel(cell.dataset.date);
+  if (cell){ // 일정·가계부 탭: 날짜를 누르면 바로 등록 창 (기존 기록은 항목을 눌러 수정)
+    const ac = catById(db.activeTab), s = cell.dataset.date;
+    if (ac?.kind === 'schedule'){ ui.selected = s; openEvModal(null, s, ac.id); }
+    else if (ac?.kind === 'ledger'){ ui.selected = s; openLgModal(ac.id, s); }
+    else openPanel(s);
+  }
 });
 
 document.addEventListener('dblclick', e => {
