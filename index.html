@@ -1870,9 +1870,10 @@ addEventListener('resize', () => { if (db.view !== 'year') renderGrid(); });
 // 월간 날짜 칸: 세로 = 가로 (정사각형) 유지. 칸이 클수록 더 많은 항목을 보여 줌
 function sizeGrid(){
   const g = $('grid'); if (!g.clientWidth) return;
-  const w = g.clientWidth / 7; g.style.gridAutoRows = w + 'px';
   const mobile = matchMedia('(max-width:820px)').matches;
-  const lim = Math.max(1, Math.floor((w - (mobile ? 40 : 46)) / 22));
+  const h = mobile ? 110 : g.clientWidth / 7; // 휴대폰은 칸이 너무 작아지므로 높이 110px 고정
+  g.style.gridAutoRows = h + 'px';
+  const lim = Math.max(1, Math.floor((h - (mobile ? 40 : 46)) / 22));
   if (lim !== ui.cellLimit){ ui.cellLimit = lim; if (db.view === 'month') renderGrid(); }
 }
 new ResizeObserver(sizeGrid).observe($('grid'));
